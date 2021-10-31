@@ -14,9 +14,14 @@
    <string>nosok-bot console v1.0</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(211, 211, 211);</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">#centralwidget {
+	background-color: rgb(50, 40, 175);
+}</string>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
      <number>3</number>
@@ -25,25 +30,25 @@
      <number>6</number>
     </property>
     <property name="topMargin">
-     <number>6</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>6</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>6</number>
+     <number>0</number>
     </property>
     <item>
      <widget class="QWidget" name="navBar" native="true">
       <property name="minimumSize">
        <size>
-        <width>51</width>
+        <width>100</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>51</width>
+        <width>100</width>
         <height>16777215</height>
        </size>
       </property>
@@ -53,9 +58,25 @@
 	overflow: visible;
 }
 
+QRadioButton {
+	position: absolute;
+
+	color: black;
+	font-family: Montserrat;
+	font-size: 15px;
+	text-align: center;
+
+	background-color: rgb(255, 255, 255);
+	border-style: solid;
+	border-radius: 10px;
+	padding: 5px;
+	
+	box-shadow: 5px 5px rgb(31, 18, 154)
+}
+
 QRadioButton::indicator {
-    width: 45px;
-    height: 45px;
+    width: 30px;
+    height: 30px;
 }
 
 #home_2::indicator:checked {
@@ -98,6 +119,9 @@ QRadioButton::indicator {
          <property name="styleSheet">
           <string notr="true"/>
          </property>
+         <property name="text">
+          <string>Home</string>
+         </property>
          <property name="iconSize">
           <size>
            <width>32</width>
@@ -118,7 +142,7 @@ QRadioButton::indicator {
           </size>
          </property>
          <property name="text">
-          <string/>
+          <string>Logs</string>
          </property>
          <property name="iconSize">
           <size>
@@ -133,10 +157,38 @@ QRadioButton::indicator {
     </item>
     <item>
      <widget class="QStackedWidget" name="pages">
+      <property name="styleSheet">
+       <string notr="true">QWidget {
+	border-style: solid;
+	border-width: 1px;
+	border-top-left-radius: 30px;
+	border-bottom-left-radius: 30px;
+	background-color: rgb(255, 255, 255);
+}
+
+QPushButton {
+	background-color: rgb(50, 40, 175);
+	border: 1px solid rgb(50, 40, 175);
+	border-radius: 10px;
+	padding: 7px;
+
+	font-family: Montserrat;
+	font-size: 15px;
+	text-align: center;
+	color: white;
+}
+
+QPushButton:hover {
+	background-color: rgb(30, 20, 155)
+}</string>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
       <widget class="QWidget" name="homePage">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <layout class="QGridLayout" name="gridLayout_2">
         <property name="leftMargin">
          <number>0</number>
@@ -154,18 +206,6 @@ QRadioButton::indicator {
          <number>3</number>
         </property>
         <item row="0" column="0">
-         <widget class="QPlainTextEdit" name="logger">
-          <property name="styleSheet">
-           <string notr="true">border: 1px solid rgb(0, 0, 0);
-border-radius: 5px;
-background-color: white;</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
          <widget class="QWidget" name="controlBtns" native="true">
           <property name="maximumSize">
            <size>
@@ -174,19 +214,7 @@ background-color: white;</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">QPushButton {
-	border: 1px solid black;
-	border-radius: 5px;
-	padding: 7px;
-	font-family: Montserrat;
-	font-size: 12px;
-	background-color: rgb(255, 255, 60);
-	color: black;
-}
-
-QPushButton:hover {
-	background-color: rgb(255, 200, 60)
-}</string>
+           <string notr="true"/>
           </property>
           <layout class="QHBoxLayout" name="controlButtons">
            <property name="leftMargin">
@@ -231,24 +259,26 @@ QPushButton:hover {
        </layout>
       </widget>
       <widget class="QWidget" name="logsPage">
-       <layout class="QGridLayout" name="gridLayout_5">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>3</number>
-        </property>
+       <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_4"/>
+         <widget class="QPlainTextEdit" name="logger">
+          <property name="styleSheet">
+           <string notr="true">#logger {
+	border: None;
+	background-color: white;
+}</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="download">
+          <property name="text">
+           <string>Download log</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

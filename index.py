@@ -55,6 +55,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if response:
                 try:
                     validated = Response(**response.json())
+
+                    self.logger.setPlainText(response.text)
                 except Exception as e:
                     self._logger.warning(e)
 
@@ -76,7 +78,7 @@ def hook(*args):
 if __name__ == '__main__':
     dotenv.load_dotenv('./.env')
 
-    logging.basicConfig(level=logging.WARNING,
+    logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(name)s:\t%(message)s',
                         datefmt='%y.%b.%Y %H:%M:%S')
 
