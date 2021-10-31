@@ -1,0 +1,9 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="navigation/">
+        <file alias="home_unchecked">sources/home_unchecked.png</file>
+        <file alias="home_checked">sources/home_checked.png</file>
+        <file alias="log_checked">sources/log_checked.png</file>
+        <file alias="log_unchecked">sources/log_unchecked.png</file>
+    </qresource>
+</RCC>

@@ -8,8 +8,8 @@ import dotenv
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.uic import loadUi
 
-from requester import Requester
-from core import Response
+from requester import Requester, Response
+import resources
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -18,12 +18,13 @@ class MainWindow(QtWidgets.QMainWindow):
         loadUi('main.ui', self)
 
         self._logger = logging.getLogger('index')
+        self.pageList = ['homePage', 'logsPage']
 
         self.initUi()
 
         self._requester = Requester(os.environ.get('APPLICATION_URL'))
         self._loggingHandler = threading.Thread(
-            target=self.loggingHandling,
+            target=self.requestHandling,
             daemon=True
         )
 
@@ -38,26 +39,34 @@ class MainWindow(QtWidgets.QMainWindow):
     def initUi(self):
         self._logger.info('Initializing MainWindow\s UI')
 
+        # Navigation
+        for i in ['home_2', 'logs_2']:
+            eval(f'self.{i}').clicked.connect(self.onNavChecked)
+
+        # Controls
         for i in ['launch', 'terminate', 'restart']:
-            eval(f'self.{i}').clicked.connect(self.onButtonClick)
+            eval(f'self.{i}').clicked.connect(self.onControlBtnClick)
 
         self._logger.info('Initialized UI, going further')
 
-    def loggingHandling(self):
+    def requestHandling(self):
         while True:
             response = self._requester.response
             if response:
                 try:
                     validated = Response(**response.json())
-
-                    self.logger.setPlainText(response.text)
                 except Exception as e:
                     self._logger.warning(e)
 
             time.sleep(5)
 
-    def onButtonClick(self):
+    def onControlBtnClick(self):
         print(self.sender().objectName())
+
+    def onNavChecked(self):
+        name = self.sender().objectName()
+        page = name[:name.index('_')] + 'Page'
+        self.pages.setCurrentIndex(self.pageList.index(page))
 
 
 def hook(*args):
@@ -65,8 +74,6 @@ def hook(*args):
 
 
 if __name__ == '__main__':
-    sys.__excepthook__ = hook
-
     dotenv.load_dotenv('./.env')
 
     logging.basicConfig(level=logging.WARNING,
@@ -75,6 +82,7 @@ if __name__ == '__main__':
 
     app = QtWidgets.QApplication([])
     window = MainWindow()
+    sys.__excepthook__ = hook
 
     window.show()
     app.exec()
