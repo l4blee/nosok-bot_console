@@ -1,15 +1,38 @@
 import logging
 import os
 import sys
-import threading
 import time
 
 import dotenv
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QObject
 from PyQt5.uic import loadUi
 
-from requester import Requester, Response
+from requesters import GetRequester, PostRequester
 import resources
+
+
+class GetHandler(QObject):
+    request_ready = pyqtSignal(object)
+    getter = GetRequester(os.environ.get('APPLICATION_URL'))
+
+    def loop(self):
+        while True:
+            response = self.getter.response
+            self.request_ready.emit(response)
+
+            time.sleep(3)
+
+
+class PostHandler(QObject):
+    done = pyqtSignal(object)
+    poster = PostRequester(os.environ.get('APPLICATION_URL'))
+
+    def post(self, instruction):
+        res = self.poster.post(instruction)
+        if not res.ok:
+            pass
+        self.done.emit(res.status_code)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -22,52 +45,90 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.initUi()
 
-        self._requester = Requester(os.environ.get('APPLICATION_URL'))
-        self._loggingHandler = threading.Thread(
-            target=self.requestHandling,
-            daemon=True
-        )
+        self._thread = QThread()
 
-        self._requester.start()
-        self._loggingHandler.start()
+        self.get_handler = GetHandler()
+        self.get_handler.request_ready.connect(self.updateLogs)
+
+        self.post_handler = PostHandler()
+
+        self.post_handler.moveToThread(self._thread)
+        self.get_handler.moveToThread(self._thread)
+
+        self._thread.started.connect(self.get_handler.loop)
+
+        self._thread.start()
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         self._logger.info('Closing MainWindow')
-        self._requester.close()
+        super().closeEvent(event)
         self._logger.info('MainWindow has been successfully closed')
 
     def initUi(self):
-        self._logger.info('Initializing MainWindow\s UI')
+        self._logger.info('Initializing MainWindow\'s UI')
 
         # Navigation
-        for i in ['home_2', 'logs_2']:
+        for i in ['home', 'logs']:
             eval(f'self.{i}').clicked.connect(self.onNavChecked)
 
-        # Controls
+        # Bot controls
         for i in ['launch', 'terminate', 'restart']:
             eval(f'self.{i}').clicked.connect(self.onControlBtnClick)
 
-        self._logger.info('Initialized UI, going further')
+        # Window controls
+        self.close_btn.clicked.connect(self.close)
+        self.minimize_btn.clicked.connect(self.showMinimized)
+        self.maximize_btn.clicked.connect(self.maximizeEvent)
 
-    def requestHandling(self):
-        while True:
-            response = self._requester.response
-            if response:
-                try:
-                    validated = Response(**response.json())
+        self.topBar.mouseMoveEvent = self.moveWindow
 
-                    self.logger.setPlainText(response.text)
-                except Exception as e:
-                    self._logger.warning(e)
+        # Other settings
+        self.setWindowFlag(QtCore.Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
-            time.sleep(5)
+        self._logger.info('Initialized UI, going further...')
+
+    def maximizeEvent(self):
+        if self.isMaximized():
+            self.centralWidget().setStyleSheet(
+                '#centralwidget {\n'
+                'background-color: rgb(50, 40, 175);\n'
+                'border: 1px transparent;\n'
+                'border-radius: 20px;\n'
+                '}')
+            self.maximize_btn.setToolTip('Maximize')
+            self.showNormal()
+        else:
+            self.centralWidget().setStyleSheet(
+                '#centralwidget {\n'
+                'background-color: rgb(50, 40, 175);\n'
+                'border: none;\n'
+                '}')
+            self.maximize_btn.setToolTip('Restore')
+            self.showMaximized()
+
+    def moveWindow(self, event):
+        if event.buttons() == Qt.LeftButton:
+            if self.isMaximized():
+                self.maximizeEvent()
+
+            self.move(self.pos() + event.globalPos() - self.dragPos)
+            self.dragPos = event.globalPos()
+            event.accept()
+
+    def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
+        self.dragPos = event.globalPos()
+
+    def updateLogs(self, signal: dict):
+        self.logger.setPlainText(signal['log'].content)
+        self.logger.moveCursor(QtGui.QTextCursor.End)
 
     def onControlBtnClick(self):
-        print(self.sender().objectName())
+        instruction = self.sender().objectName()
+        self.post_handler.post(instruction)
 
     def onNavChecked(self):
-        name = self.sender().objectName()
-        page = name[:name.index('_')] + 'Page'
+        page = self.sender().objectName() + 'Page'
         self.pages.setCurrentIndex(self.pageList.index(page))
 
 
@@ -88,3 +149,5 @@ if __name__ == '__main__':
 
     window.show()
     app.exec()
+
+    del window, app

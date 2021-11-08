@@ -6,28 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>782</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>nosok-bot console v1.0</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QMainWindow {
+	border: none;
+	border-radius: 20px
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
     <string notr="true">#centralwidget {
-	background-color: rgb(50, 40, 175);
+	background-color: rgb(244, 152, 128);
+	border: 1px transparent;
+	border-radius: 20px;
 }</string>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="spacing">
-     <number>3</number>
-    </property>
+   <layout class="QGridLayout" name="gridLayout_3">
     <property name="leftMargin">
-     <number>6</number>
+     <number>9</number>
     </property>
     <property name="topMargin">
      <number>0</number>
@@ -38,7 +40,140 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
+    <item row="0" column="0" colspan="4">
+     <widget class="QWidget" name="topBar" native="true">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>25</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">#topBar {
+	border: none;
+	border-radius: 20px;
+}
+
+QPushButton {
+	border: none;
+	border-radius: 8px;
+}
+
+#close_btn {
+	background-color: rgb(255, 0, 0, 255);
+}
+
+#close_btn:hover {
+	background-color: rgb(255, 0, 0, 150);
+}
+
+#minimize_btn {
+	background-color: rgba(0, 255, 0, 255);
+}
+
+#minimize_btn:hover {
+	background-color: rgba(0, 255, 0, 150);
+}
+
+#maximize_btn {
+	background-color: rgba(255, 255, 0, 255);
+}
+
+#maximize_btn:hover {
+	background-color: rgba(255, 255, 0, 150);
+}</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>15</number>
+       </property>
+       <property name="leftMargin">
+        <number>15</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>15</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="title">
+         <property name="styleSheet">
+          <string notr="true">color: white;
+font-family: Montserrat;
+font-size: 15px;
+font-weight: bold;
+text-align: center;</string>
+         </property>
+         <property name="text">
+          <string>NOSOK-BOT CONSOLE</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="minimize_btn">
+         <property name="maximumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Minimize</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="maximize_btn">
+         <property name="maximumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Maximize</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="close_btn">
+         <property name="maximumSize">
+          <size>
+           <width>16</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Close</string>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0" rowspan="2" colspan="2">
      <widget class="QWidget" name="navBar" native="true">
       <property name="minimumSize">
        <size>
@@ -53,12 +188,7 @@
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">#QWidget {
-	padding: 0;
-	overflow: visible;
-}
-
-QRadioButton {
+       <string notr="true">QRadioButton {
 	position: absolute;
 
 	color: black;
@@ -79,19 +209,19 @@ QRadioButton::indicator {
     height: 30px;
 }
 
-#home_2::indicator:checked {
+#home::indicator:checked {
 	image: url(:/navigation/home_checked);
 }
 
-#home_2::indicator:unchecked {
+#home::indicator:unchecked {
 	image: url(:/navigation/home_unchecked);
 }
 
-#logs_2::indicator:checked {
+#logs::indicator:checked {
 	image: url(:/navigation/log_checked);
 }
 
-#logs_2::indicator:unchecked {
+#logs::indicator:unchecked {
 	image: url(:/navigation/log_unchecked);
 }</string>
       </property>
@@ -109,7 +239,7 @@ QRadioButton::indicator {
         <number>3</number>
        </property>
        <item>
-        <widget class="QRadioButton" name="home_2">
+        <widget class="QRadioButton" name="home">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -134,7 +264,7 @@ QRadioButton::indicator {
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="logs_2">
+        <widget class="QRadioButton" name="logs">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -155,20 +285,18 @@ QRadioButton::indicator {
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="1" column="3" rowspan="2">
      <widget class="QStackedWidget" name="pages">
       <property name="styleSheet">
        <string notr="true">QWidget {
-	border-style: solid;
-	border-width: 1px;
-	border-top-left-radius: 30px;
-	border-bottom-left-radius: 30px;
+	border: 1px transparent;
+	border-radius: 20px;
 	background-color: rgb(255, 255, 255);
 }
 
 QPushButton {
-	background-color: rgb(50, 40, 175);
-	border: 1px solid rgb(50, 40, 175);
+	background-color: rgb(1, 191, 191, 255);
+	border: none;
 	border-radius: 10px;
 	padding: 7px;
 
@@ -179,11 +307,11 @@ QPushButton {
 }
 
 QPushButton:hover {
-	background-color: rgb(30, 20, 155)
+	background-color: rgb(1, 191, 191, 150);
 }</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="homePage">
        <property name="styleSheet">
@@ -205,18 +333,18 @@ QPushButton:hover {
         <property name="spacing">
          <number>3</number>
         </property>
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QWidget" name="controlBtns" native="true">
           <property name="maximumSize">
            <size>
             <width>16777215</width>
-            <height>16777215</height>
+            <height>150</height>
            </size>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>
-          <layout class="QHBoxLayout" name="controlButtons">
+          <layout class="QVBoxLayout" name="verticalLayout">
            <property name="leftMargin">
             <number>3</number>
            </property>
@@ -230,12 +358,9 @@ QPushButton:hover {
             <number>3</number>
            </property>
            <item>
-            <widget class="QPushButton" name="launch">
-             <property name="styleSheet">
-              <string notr="true">&lt;button class=&quot;control_button&quot;&gt;</string>
-             </property>
+            <widget class="QPushButton" name="restart">
              <property name="text">
-              <string>Launch</string>
+              <string>Restart</string>
              </property>
             </widget>
            </item>
@@ -247,36 +372,43 @@ QPushButton:hover {
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="restart">
+            <widget class="QPushButton" name="launch">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
-              <string>Restart</string>
+              <string>Launch</string>
              </property>
             </widget>
            </item>
           </layout>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="logsPage">
        <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="download">
+          <property name="text">
+           <string>Download log</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
-         <widget class="QPlainTextEdit" name="logger">
+         <widget class="QTextBrowser" name="logger">
           <property name="styleSheet">
            <string notr="true">#logger {
 	border: None;
 	background-color: white;
 }</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="download">
-          <property name="text">
-           <string>Download log</string>
           </property>
          </widget>
         </item>
