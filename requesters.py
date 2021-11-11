@@ -12,7 +12,6 @@ load_dotenv('.env')
 class GetRequester:
     def __init__(self, url):
         self._url = url
-        print(url)
         self._res = None
         self._logger = logging.getLogger('requester')
 

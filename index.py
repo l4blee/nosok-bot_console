@@ -16,6 +16,8 @@ from PyQt5.uic import loadUi
 from requesters import GetRequester, PostRequester, Vars
 import resources
 
+CHART_WIDTH = 320
+
 
 class GetHandler(QObject):
     done = pyqtSignal(object)
@@ -62,8 +64,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self._thread.started.connect(self.get_handler.loop)
 
-        self.latency_log = [0 for _ in range(10)]
-        self.memory_usage_log = [0 for _ in range(10)]
+        self.latency_log = [-2 for _ in range(10)]
+        self.memory_usage_log = [-2 for _ in range(10)]
 
         self._thread.start()
 
@@ -138,27 +140,32 @@ class MainWindow(QtWidgets.QMainWindow):
     def updateVars(self, signal: dict):
         vars_: Vars = signal['vars']
         data = json.loads(vars_.json())
-        latency, memory = data['latency'], data['memory_used']
+        latency, servers, memory = data.values()
 
-        del self.memory_usage_log[-1]
-        self.memory_usage_log.insert(0, round(memory, 2))
+        self.servers.setText(f'Servers: {len(servers)}')
+        self.title_mem.setText(f'Memory: {memory:.2f} MB')
+        self.title_lat.setText(f'Latency: {latency:.2f} s')
 
-        del self.latency_log[-1]
-        self.latency_log.insert(0, round(latency, 2))
+        del self.memory_usage_log[0]
+        self.memory_usage_log.append(round(memory, 2))
+
+        del self.latency_log[0]
+        self.latency_log.append(round(latency, 2))
 
         # Memory usage chart
         fig: plt.Figure = plt.figure(figsize=(4, 4))
         y = self.memory_usage_log
         x = list(range(10))
-        plt.plot(x, y)
+        plt.bar(x, y, width=1, color='#bfbf01')
         plt.xticks(x)
+        plt.ylim([0, 512])
         plt.margins(0.015, tight=True)
         plt.tight_layout()
         buffer = io.BytesIO()
         fig.savefig(buffer, format='png')
 
         img = Image.open(buffer, formats=['png'])
-        img = img.resize((290, 290))
+        img = img.resize((CHART_WIDTH, CHART_WIDTH))
         pixmap = self.convertImage(img)
         self.memory.setPixmap(pixmap)
 
@@ -166,19 +173,21 @@ class MainWindow(QtWidgets.QMainWindow):
         fig: plt.Figure = plt.figure(figsize=(4, 4))
         y = self.latency_log
         x = list(range(10))
-        plt.plot(x, y)
+        plt.bar(x, y, width=1, color='#bfbf01')
         plt.xticks(x)
+        plt.ylim([0, 0.5])
         plt.margins(0.015, tight=True)
         plt.tight_layout()
         buffer = io.BytesIO()
         fig.savefig(buffer, format='png')
 
         img = Image.open(buffer, formats=['png'])
-        img = img.resize((290, 290))
+        img = img.resize((CHART_WIDTH, CHART_WIDTH))
         pixmap = self.convertImage(img)
         self.latency.setPixmap(pixmap)
-
-    def convertImage(self, im):
+    
+    @staticmethod
+    def convertImage(im):
         im2 = im.convert('RGBA')
         data = im2.tobytes('raw', 'RGBA')
         qim = QImage(data, im.size[0], im.size[1], QImage.Format_ARGB32)
@@ -191,8 +200,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def updateStatus(self, signal: dict):
         self.status.setText(
-            f'Bot status:\n'
-            f'{signal["status"]}'
+            f'Bot status: {signal["status"]}'
         )
 
     def onControlBtnClick(self):
