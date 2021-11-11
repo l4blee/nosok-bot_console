@@ -1,13 +1,16 @@
+import io
+import json
 import logging
 import os
 import sys
 import time
-import json
-from pprint import pformat
 
 import dotenv
+import matplotlib.pyplot as plt
+from PIL import Image
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QObject
+from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.uic import loadUi
 
 from requesters import GetRequester, PostRequester, Vars
@@ -59,6 +62,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self._thread.started.connect(self.get_handler.loop)
 
+        self.latency_log = [0 for _ in range(10)]
+        self.memory_usage_log = [0 for _ in range(10)]
+
         self._thread.start()
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
@@ -88,7 +94,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowFlag(QtCore.Qt.WindowType.FramelessWindowHint)
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        self._logger.info('Initialized UI, going further...')
+        self._logger.info('Initialized UI, starting application...')
 
     def maximizeEvent(self):
         if self.isMaximized():
@@ -132,7 +138,52 @@ class MainWindow(QtWidgets.QMainWindow):
     def updateVars(self, signal: dict):
         vars_: Vars = signal['vars']
         data = json.loads(vars_.json())
-        self.variables.setPlainText(pformat(data))
+        latency, memory = data['latency'], data['memory_used']
+
+        del self.memory_usage_log[-1]
+        self.memory_usage_log.insert(0, round(memory, 2))
+
+        del self.latency_log[-1]
+        self.latency_log.insert(0, round(latency, 2))
+
+        # Memory usage chart
+        fig: plt.Figure = plt.figure(figsize=(4, 4))
+        y = self.memory_usage_log
+        x = list(range(10))
+        plt.plot(x, y)
+        plt.xticks(x)
+        plt.margins(0.015, tight=True)
+        plt.tight_layout()
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format='png')
+
+        img = Image.open(buffer, formats=['png'])
+        img = img.resize((290, 290))
+        pixmap = self.convertImage(img)
+        self.memory.setPixmap(pixmap)
+
+        # Latency changes chart
+        fig: plt.Figure = plt.figure(figsize=(4, 4))
+        y = self.latency_log
+        x = list(range(10))
+        plt.plot(x, y)
+        plt.xticks(x)
+        plt.margins(0.015, tight=True)
+        plt.tight_layout()
+        buffer = io.BytesIO()
+        fig.savefig(buffer, format='png')
+
+        img = Image.open(buffer, formats=['png'])
+        img = img.resize((290, 290))
+        pixmap = self.convertImage(img)
+        self.latency.setPixmap(pixmap)
+
+    def convertImage(self, im):
+        im2 = im.convert('RGBA')
+        data = im2.tobytes('raw', 'RGBA')
+        qim = QImage(data, im.size[0], im.size[1], QImage.Format_ARGB32)
+        pixmap = QPixmap.fromImage(qim)
+        return pixmap
 
     def updateLogs(self, signal: dict):
         self.logger.setPlainText(signal['log'].content)
