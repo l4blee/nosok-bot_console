@@ -2,26 +2,28 @@ import logging
 import os
 import sys
 import time
+import json
+from pprint import pformat
 
 import dotenv
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QObject
 from PyQt5.uic import loadUi
 
-from requesters import GetRequester, PostRequester
+from requesters import GetRequester, PostRequester, Vars
 import resources
 
 
 class GetHandler(QObject):
-    request_ready = pyqtSignal(object)
+    done = pyqtSignal(object)
     getter = GetRequester(os.environ.get('APPLICATION_URL'))
 
     def loop(self):
         while True:
             response = self.getter.response
-            self.request_ready.emit(response)
+            self.done.emit(response)
 
-            time.sleep(3)
+            time.sleep(5)
 
 
 class PostHandler(QObject):
@@ -48,7 +50,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self._thread = QThread()
 
         self.get_handler = GetHandler()
-        self.get_handler.request_ready.connect(self.updateLogs)
+        self.get_handler.done.connect(self.onRequestReady)
 
         self.post_handler = PostHandler()
 
@@ -92,7 +94,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.isMaximized():
             self.centralWidget().setStyleSheet(
                 '#centralwidget {\n'
-                'background-color: rgb(50, 40, 175);\n'
+                'background-color: rgb(244, 152, 128);\n'
                 'border: 1px transparent;\n'
                 'border-radius: 20px;\n'
                 '}')
@@ -101,7 +103,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.centralWidget().setStyleSheet(
                 '#centralwidget {\n'
-                'background-color: rgb(50, 40, 175);\n'
+                'background-color: rgb(244, 152, 128);\n'
                 'border: none;\n'
                 '}')
             self.maximize_btn.setToolTip('Restore')
@@ -119,9 +121,28 @@ class MainWindow(QtWidgets.QMainWindow):
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
         self.dragPos = event.globalPos()
 
+    def onRequestReady(self, signal: dict):
+        if signal is None:
+            return
+
+        self.updateLogs(signal)
+        self.updateStatus(signal)
+        self.updateVars(signal)
+
+    def updateVars(self, signal: dict):
+        vars_: Vars = signal['vars']
+        data = json.loads(vars_.json())
+        self.variables.setPlainText(pformat(data))
+
     def updateLogs(self, signal: dict):
         self.logger.setPlainText(signal['log'].content)
         self.logger.moveCursor(QtGui.QTextCursor.End)
+
+    def updateStatus(self, signal: dict):
+        self.status.setText(
+            f'Bot status:\n'
+            f'{signal["status"]}'
+        )
 
     def onControlBtnClick(self):
         instruction = self.sender().objectName()

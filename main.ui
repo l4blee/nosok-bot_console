@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
-    <height>596</height>
+    <width>806</width>
+    <height>591</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,6 +40,177 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <item row="1" column="3" rowspan="2">
+     <widget class="QStackedWidget" name="pages">
+      <property name="styleSheet">
+       <string notr="true">QWidget {
+	border: 1px transparent;
+	border-radius: 20px;
+	background-color: rgb(255, 255, 255);
+}
+
+QPushButton {
+	background-color: rgb(1, 191, 191, 255);
+	border: none;
+	border-radius: 10px;
+	padding: 7px;
+
+	font-family: Montserrat;
+	font-size: 15px;
+	text-align: center;
+	color: white;
+}
+
+QPushButton:hover {
+	background-color: rgb(1, 191, 191, 150);
+}</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="homePage">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="1" column="1">
+         <widget class="QWidget" name="controlBtns" native="true">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>150</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <property name="leftMargin">
+            <number>3</number>
+           </property>
+           <property name="topMargin">
+            <number>3</number>
+           </property>
+           <property name="rightMargin">
+            <number>3</number>
+           </property>
+           <property name="bottomMargin">
+            <number>3</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="restart">
+             <property name="text">
+              <string>Restart</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="terminate">
+             <property name="text">
+              <string>Terminate</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="launch">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Launch</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="status">
+          <property name="maximumSize">
+           <size>
+            <width>125</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <family>Montserrat</family>
+            <pointsize>12</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="text">
+           <string>Bot status:</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::PlainText</enum>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QTextBrowser" name="variables">
+          <property name="font">
+           <font>
+            <family>Montserrat</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">padding: 10px;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="logsPage">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="download">
+          <property name="text">
+           <string>Download log</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTextBrowser" name="logger">
+          <property name="font">
+           <font>
+            <family>Montserrat</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#logger {
+	border: None;
+	background-color: white;
+}</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
     <item row="0" column="0" colspan="4">
      <widget class="QWidget" name="topBar" native="true">
       <property name="maximumSize">
@@ -283,137 +454,6 @@ QRadioButton::indicator {
         </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item row="1" column="3" rowspan="2">
-     <widget class="QStackedWidget" name="pages">
-      <property name="styleSheet">
-       <string notr="true">QWidget {
-	border: 1px transparent;
-	border-radius: 20px;
-	background-color: rgb(255, 255, 255);
-}
-
-QPushButton {
-	background-color: rgb(1, 191, 191, 255);
-	border: none;
-	border-radius: 10px;
-	padding: 7px;
-
-	font-family: Montserrat;
-	font-size: 15px;
-	text-align: center;
-	color: white;
-}
-
-QPushButton:hover {
-	background-color: rgb(1, 191, 191, 150);
-}</string>
-      </property>
-      <property name="currentIndex">
-       <number>1</number>
-      </property>
-      <widget class="QWidget" name="homePage">
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <property name="spacing">
-         <number>3</number>
-        </property>
-        <item row="1" column="0">
-         <widget class="QWidget" name="controlBtns" native="true">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>150</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="leftMargin">
-            <number>3</number>
-           </property>
-           <property name="topMargin">
-            <number>3</number>
-           </property>
-           <property name="rightMargin">
-            <number>3</number>
-           </property>
-           <property name="bottomMargin">
-            <number>3</number>
-           </property>
-           <item>
-            <widget class="QPushButton" name="restart">
-             <property name="text">
-              <string>Restart</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="terminate">
-             <property name="text">
-              <string>Terminate</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="launch">
-             <property name="styleSheet">
-              <string notr="true"/>
-             </property>
-             <property name="text">
-              <string>Launch</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="logsPage">
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="1" column="0">
-         <widget class="QPushButton" name="download">
-          <property name="text">
-           <string>Download log</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QTextBrowser" name="logger">
-          <property name="styleSheet">
-           <string notr="true">#logger {
-	border: None;
-	background-color: white;
-}</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
    </layout>
