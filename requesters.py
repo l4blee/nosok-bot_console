@@ -20,6 +20,10 @@ class GetRequester:
     def response(self) -> Union[dict, None]:
         self._logger.info(f'Requesting {self._url}...')
         try:
+            # Status
+            self._logger.info(f'Getting bot status')
+            _status = requests.get(self._url).json()['status']
+
             # Vars
             self._logger.info(f'Getting variables via {self._url + "vars"}')
             _vars = requests.get(self._url + 'vars')
@@ -33,6 +37,7 @@ class GetRequester:
                 _log = Log(**_log.json())
 
             return {
+                'status': _status,
                 'log': _log,
                 'vars': _vars
             }
@@ -66,16 +71,3 @@ class Vars(pydantic.BaseModel):
 
 class Log(pydantic.BaseModel):
     content: str
-
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.WARNING,
-                        format='%(asctime)s - %(levelname)s - %(name)s:\t%(message)s',
-                        datefmt='%y.%b.%Y %H:%M:%S')
-    url = 'http://localhost:5000/'
-
-    getter = GetRequester(url)
-    poster = PostRequester(url)
-
-    # print(getter.response)
-    print(poster.post)
