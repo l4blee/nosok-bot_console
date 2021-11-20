@@ -8,9 +8,10 @@ import time
 import dotenv
 import matplotlib.pyplot as plt
 from PIL import Image
-from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QObject
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap, QFontDatabase, QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.uic import loadUi
 
 from requesters import GetRequester, PostRequester, Vars
@@ -42,7 +43,7 @@ class PostHandler(QObject):
         self.done.emit(res.status_code)
 
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         loadUi('main.ui', self)
@@ -156,13 +157,14 @@ class MainWindow(QtWidgets.QMainWindow):
         fig: plt.Figure = plt.figure(figsize=(4, 4))
         y = self.memory_usage_log
         x = list(range(10))
-        plt.bar(x, y, width=1, color='#bfbf01')
+        plt.bar(x, y, width=0.9, color='#bfbf01')
         plt.xticks(x)
         plt.ylim([0, 512])
         plt.margins(0.015, tight=True)
         plt.tight_layout()
         buffer = io.BytesIO()
         fig.savefig(buffer, format='png')
+        plt.close(fig)
 
         img = Image.open(buffer, formats=['png'])
         img = img.resize((CHART_WIDTH, CHART_WIDTH))
@@ -173,19 +175,20 @@ class MainWindow(QtWidgets.QMainWindow):
         fig: plt.Figure = plt.figure(figsize=(4, 4))
         y = self.latency_log
         x = list(range(10))
-        plt.bar(x, y, width=1, color='#bfbf01')
+        plt.bar(x, y, width=0.9, color='#bfbf01')
         plt.xticks(x)
         plt.ylim([0, 0.5])
         plt.margins(0.015, tight=True)
         plt.tight_layout()
         buffer = io.BytesIO()
         fig.savefig(buffer, format='png')
+        plt.close(fig)
 
         img = Image.open(buffer, formats=['png'])
         img = img.resize((CHART_WIDTH, CHART_WIDTH))
         pixmap = self.convertImage(img)
         self.latency.setPixmap(pixmap)
-    
+
     @staticmethod
     def convertImage(im):
         im2 = im.convert('RGBA')
@@ -200,7 +203,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def updateStatus(self, signal: dict):
         self.status.setText(
-            f'Bot status: {signal["status"]}'
+            f'Bot status:\n{signal["status"]}'
         )
 
     def onControlBtnClick(self):
@@ -218,12 +221,15 @@ def hook(*args):
 
 if __name__ == '__main__':
     dotenv.load_dotenv('./.env')
+    pyqt_plugins = 'venv/Lib/site-packages/PyQt5/Qt5/plugins/platforms'
+    os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = pyqt_plugins
 
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - %(name)s:\t%(message)s',
                         datefmt='%y.%b.%Y %H:%M:%S')
 
-    app = QtWidgets.QApplication([])
+    app = QApplication([])
+    QFontDatabase.addApplicationFont('sources/fonts/Montserrat-Regular.ttf')
     window = MainWindow()
     sys.__excepthook__ = hook
 

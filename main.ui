@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>600</height>
+    <width>906</width>
+    <height>603</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,11 +20,24 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="font">
+    <font>
+     <family>Montserrat SemiBold</family>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="styleSheet">
     <string notr="true">#centralwidget {
 	background-color: rgb(244, 152, 128);
 	border: 1px transparent;
 	border-radius: 20px;
+}
+
+QLabel, QPushButton, QRadioButton {
+	font-family: Montserrat;
+	font-size: 14px;
+	text-align: center;
 }</string>
    </property>
    <layout class="QGridLayout" name="gridLayout_3">
@@ -54,11 +67,7 @@ QPushButton {
 	border: none;
 	border-radius: 10px;
 	padding: 7px;
-
-	font-family: Montserrat;
-	font-size: 15px;
-	text-align: center;
-	color: white;
+	color: white
 }
 
 QPushButton:hover {
@@ -147,7 +156,7 @@ QPushButton:hover {
                 <property name="font">
                  <font>
                   <family>Montserrat</family>
-                  <pointsize>10</pointsize>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -215,7 +224,7 @@ QPushButton:hover {
                 <property name="font">
                  <font>
                   <family>Montserrat</family>
-                  <pointsize>10</pointsize>
+                  <pointsize>-1</pointsize>
                  </font>
                 </property>
                 <property name="text">
@@ -277,6 +286,12 @@ QPushButton:hover {
            </property>
            <item>
             <widget class="QPushButton" name="restart">
+             <property name="font">
+              <font>
+               <family>Montserrat</family>
+               <pointsize>-1</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>Restart</string>
              </property>
@@ -284,6 +299,12 @@ QPushButton:hover {
            </item>
            <item>
             <widget class="QPushButton" name="terminate">
+             <property name="font">
+              <font>
+               <family>Montserrat</family>
+               <pointsize>-1</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>Terminate</string>
              </property>
@@ -317,10 +338,7 @@ QPushButton:hover {
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">QLabel {
-	font-family: Montserrat;
-	font-size: 14px
-}</string>
+           <string notr="true"/>
           </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
@@ -344,6 +362,12 @@ QPushButton:hover {
            </item>
            <item>
             <widget class="QLabel" name="servers">
+             <property name="font">
+              <font>
+               <family>Montserrat</family>
+               <pointsize>-1</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>Servers:</string>
              </property>
@@ -373,8 +397,10 @@ QPushButton:hover {
          <widget class="QTextBrowser" name="logger">
           <property name="font">
            <font>
-            <family>Montserrat</family>
+            <family>Droid Sans Mono</family>
             <pointsize>10</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -450,12 +476,17 @@ QPushButton {
        </property>
        <item>
         <widget class="QLabel" name="title">
+         <property name="font">
+          <font>
+           <family>Montserrat</family>
+           <pointsize>-1</pointsize>
+           <weight>62</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="styleSheet">
           <string notr="true">color: white;
-font-family: Montserrat;
-font-size: 15px;
-font-weight: bold;
-text-align: center;</string>
+font-weight: 500</string>
          </property>
          <property name="text">
           <string>NOSOK-BOT CONSOLE</string>
@@ -538,19 +569,12 @@ text-align: center;</string>
       </property>
       <property name="styleSheet">
        <string notr="true">QRadioButton {
-	position: absolute;
-
 	color: black;
-	font-family: Montserrat;
-	font-size: 15px;
-	text-align: center;
 
 	background-color: rgb(255, 255, 255);
 	border-style: solid;
 	border-radius: 10px;
 	padding: 5px;
-	
-	box-shadow: 5px 5px rgb(31, 18, 154)
 }
 
 QRadioButton::indicator {
@@ -594,6 +618,12 @@ QRadioButton::indicator {
            <width>16777215</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Montserrat</family>
+           <pointsize>-1</pointsize>
+          </font>
          </property>
          <property name="styleSheet">
           <string notr="true"/>

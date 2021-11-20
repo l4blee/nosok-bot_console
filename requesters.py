@@ -21,27 +21,38 @@ class GetRequester:
         try:
             # Status
             self._logger.info(f'Getting bot status')
-            _status = requests.get(self._url).json()['status']
+            _status = requests.get(self._url)
+            _status = _status.json()['status'] if _status.ok else 'unknown'
 
             # Vars
             self._logger.info(f'Getting variables via {self._url + "vars"}')
             _vars = requests.get(self._url + 'vars')
-            if _vars is not None:
-                _vars = Vars(**_vars.json())
+            _vars = Vars(**_vars.json()) if _vars.ok else Vars(
+                latency=float('Nan'),
+                servers=[],
+                memory_used=float('Nan')
+            )
 
             # Log
             self._logger.info(f'Getting logs via {self._url + "log"}')
             _log = requests.get(self._url + 'log')
-            if _log is not None:
-                _log = Log(**_log.json())
-
-            return {
-                'status': _status,
-                'log': _log,
-                'vars': _vars
-            }
+            _log = Log(**_log.json()) if _log.ok else Log(content='')
         except requests.exceptions.RequestException:
+            _status = 'unknown'
+            _log = Log(content='')
+            _vars = Vars(
+                latency=float('Nan'),
+                servers=[],
+                memory_used=float('Nan')
+            )
+
             self._logger.warning(f'Failed requesting {self._url}...')
+
+        return {
+            'status': _status,
+            'log': _log,
+            'vars': _vars
+        }
 
 
 class PostRequester:
