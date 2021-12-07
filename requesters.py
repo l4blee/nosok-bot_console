@@ -29,7 +29,7 @@ class GetRequester:
             _vars = requests.get(self._url + 'vars')
             _vars = Vars(**_vars.json()) if _vars.ok else Vars(
                 latency=float('Nan'),
-                servers=[],
+                servers=0,
                 memory_used=float('Nan')
             )
 
@@ -42,7 +42,7 @@ class GetRequester:
             _log = Log(content='')
             _vars = Vars(
                 latency=float('Nan'),
-                servers=[],
+                servers=0,
                 memory_used=float('Nan')
             )
 
@@ -74,9 +74,9 @@ class PostRequester:
 
 
 class Vars(pydantic.BaseModel):
-    latency: float
-    servers: list[int]
-    memory_used: float
+    cpu_used: float
+    servers: int
+    memory_used: str
 
 
 class Log(pydantic.BaseModel):

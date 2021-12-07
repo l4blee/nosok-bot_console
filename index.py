@@ -29,7 +29,7 @@ class GetHandler(QObject):
             response = self.getter.response
             self.done.emit(response)
 
-            time.sleep(5)
+            time.sleep(0.3)
 
 
 class PostHandler(QObject):
@@ -40,6 +40,7 @@ class PostHandler(QObject):
         res = self.poster.post(instruction)
         if not res.ok:
             pass
+
         self.done.emit(res.status_code)
 
 
@@ -141,17 +142,18 @@ class MainWindow(QMainWindow):
     def updateVars(self, signal: dict):
         vars_: Vars = signal['vars']
         data = json.loads(vars_.json())
-        latency, servers, memory = data.values()
+        cpu, servers, memory = data.values()
+        memory = float(memory[:-1])
 
-        self.servers.setText(f'Servers: {len(servers)}')
+        self.servers.setText(f'Servers: {servers}')
         self.title_mem.setText(f'Memory: {memory:.2f} MB')
-        self.title_lat.setText(f'Latency: {latency:.2f} s')
+        self.title_lat.setText(f'CPU: {cpu:.2f}%')
 
         del self.memory_usage_log[0]
         self.memory_usage_log.append(round(memory, 2))
 
         del self.latency_log[0]
-        self.latency_log.append(round(latency, 2))
+        self.latency_log.append(round(cpu, 2))
 
         # Memory usage chart
         fig: plt.Figure = plt.figure(figsize=(4, 4))
